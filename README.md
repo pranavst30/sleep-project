@@ -68,6 +68,6 @@ You can now open a browser and go to `http://localhost:8080`!
 ├── vite.config.ts              # Vite configuration (proxies /api to Flask)
 └── src/                        # Frontend source code
     ├── pages/                  # Home, Prediction, Chart, Performance
-    ├── components/             # Layout and reusable UI components
+    ├── components/             # Layout and reusable UI componentes
     └── ...                     
 ```
