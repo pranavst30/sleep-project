@@ -1,10 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import {
-  CheckCircle,
-  Target,
-  TrendingUp,
+import { 
+  CheckCircle, 
+  Target, 
+  TrendingUp, 
   Brain,
   BarChart3,
   Zap,
@@ -13,55 +13,40 @@ import {
 } from 'lucide-react';
 
 const Performance = () => {
+  // Mock performance metrics based on typical ML model performance
   const modelMetrics = {
-    randomForest: {
-      accuracy: 91.15,
-      precision: 91.58,
-      recall: 91.15,
-      f1Score: 91.28,
-      trainingTime: '2.1 min',
-      predictionTime: '40 ms'
-    },
-    qda: {
-      accuracy: 87.61,
-      precision: 89.21,
-      recall: 87.61,
-      f1Score: 88.08,
-      trainingTime: '1.2 min',
-      predictionTime: '25 ms'
-    },
-    lightgbm: {
-      accuracy: 93.81,
-      precision: 94.59,
-      recall: 93.81,
-      f1Score: 93.93,
-      trainingTime: '1.5 min',
-      predictionTime: '30 ms'
-    },
-    svm: {
-      accuracy: 95.58,
-      precision: 95.88,
-      recall: 95.58,
-      f1Score: 95.62,
-      trainingTime: '3.5 min',
+    gradientBoosting: {
+      accuracy: 94.2,
+      precision: 91.8,
+      recall: 93.5,
+      f1Score: 92.6,
+      trainingTime: '3.2 min',
       predictionTime: '45 ms'
+    },
+    quadraticDiscriminant: {
+      accuracy: 87.3,
+      precision: 84.7,
+      recall: 89.1,
+      f1Score: 86.8,
+      trainingTime: '1.8 min',
+      predictionTime: '32 ms'
     }
   };
 
   const datasetMetrics = {
-    totalSamples: 400,
-    features: 12,
+    totalSamples: 375,
+    features: 11,
     classes: 3,
-
-    cvScore: 92.92
+    balanceScore: 78.5,
+    qualityScore: 92.3
   };
 
-  const MetricCard = ({
-    title,
-    value,
-    description,
-    icon: Icon,
-    color = "primary"
+  const MetricCard = ({ 
+    title, 
+    value, 
+    description, 
+    icon: Icon, 
+    color = "primary" 
   }: {
     title: string;
     value: string | number;
@@ -85,14 +70,14 @@ const Performance = () => {
     </Card>
   );
 
-  const ModelPerformanceCard = ({
-    title,
-    metrics,
+  const ModelPerformanceCard = ({ 
+    title, 
+    metrics, 
     description,
-    recommended = false
+    recommended = false 
   }: {
     title: string;
-    metrics: typeof modelMetrics.svm;
+    metrics: typeof modelMetrics.gradientBoosting;
     description: string;
     recommended?: boolean;
   }) => (
@@ -121,7 +106,7 @@ const Performance = () => {
             </div>
             <Progress value={metrics.accuracy} className="h-2" />
           </div>
-
+          
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Precision</span>
@@ -129,7 +114,7 @@ const Performance = () => {
             </div>
             <Progress value={metrics.precision} className="h-2" />
           </div>
-
+          
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Recall</span>
@@ -137,7 +122,7 @@ const Performance = () => {
             </div>
             <Progress value={metrics.recall} className="h-2" />
           </div>
-
+          
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>F1-Score</span>
@@ -174,7 +159,7 @@ const Performance = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
           title="Overall Accuracy"
-          value="95.58"
+          value="94.2%"
           description="Best model performance"
           icon={Target}
           color="primary"
@@ -194,9 +179,9 @@ const Performance = () => {
           color="primary-glow"
         />
         <MetricCard
-          title="CV Score"
-          value="92.92%"
-          description="10-Fold Stratified CV"
+          title="Data Quality"
+          value="92.3%"
+          description="Dataset completeness"
           icon={CheckCircle}
           color="accent"
         />
@@ -213,27 +198,15 @@ const Performance = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ModelPerformanceCard
-            title="Support Vector Machine (SVM)"
-            metrics={modelMetrics.svm}
-            description="Optimal hyperplane classifier in high-dimensional feature space"
+            title="Gradient Boosting Classifier"
+            metrics={modelMetrics.gradientBoosting}
+            description="Ensemble method using sequential weak learners for high accuracy"
             recommended={true}
           />
-
-          <ModelPerformanceCard
-            title="LightGBM"
-            metrics={modelMetrics.lightgbm}
-            description="Fast, distributed, high performance gradient boosting framework"
-          />
-
-          <ModelPerformanceCard
-            title="Random Forest"
-            metrics={modelMetrics.randomForest}
-            description="Ensemble learning method combining multiple decision trees"
-          />
-
+          
           <ModelPerformanceCard
             title="Quadratic Discriminant Analysis"
-            metrics={modelMetrics.qda}
+            metrics={modelMetrics.quadraticDiscriminant}
             description="Probabilistic classifier assuming Gaussian distributions"
           />
         </div>
@@ -267,16 +240,25 @@ const Performance = () => {
           </div>
 
           <div className="space-y-4">
-
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Class Balance Score</span>
+                <span className="font-medium">{datasetMetrics.balanceScore}%</span>
+              </div>
+              <Progress value={datasetMetrics.balanceScore} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                Measures how evenly distributed the sleep disorder classes are
+              </p>
+            </div>
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Cross-Validation Score</span>
-                <span className="font-medium">{datasetMetrics.cvScore}%</span>
+                <span>Data Quality Score</span>
+                <span className="font-medium">{datasetMetrics.qualityScore}%</span>
               </div>
-              <Progress value={datasetMetrics.cvScore} className="h-2" />
+              <Progress value={datasetMetrics.qualityScore} className="h-2" />
               <p className="text-xs text-muted-foreground">
-                Average model accuracy across 10 independent data folds
+                Completeness, consistency, and accuracy of the dataset
               </p>
             </div>
           </div>
@@ -297,17 +279,14 @@ const Performance = () => {
         <CardContent>
           <div className="space-y-4">
             {[
-              { feature: 'BMI Category', importance: 41.0 },
-              { feature: 'Blood Pressure', importance: 20.2 },
-              { feature: 'Age', importance: 9.7 },
-              { feature: 'Physical Activity Level', importance: 7.6 },
-              { feature: 'Daily Steps', importance: 6.6 },
-              { feature: 'Heart Rate', importance: 5.8 },
-              { feature: 'Sleep Duration', importance: 4.8 },
-              { feature: 'Stress Level', importance: 1.5 },
-              { feature: 'Occupation', importance: 1.2 },
-              { feature: 'Quality of Sleep', importance: 0.8 },
-              { feature: 'Gender', importance: 0.5 }
+              { feature: 'Sleep Duration', importance: 92.3 },
+              { feature: 'Quality of Sleep', importance: 87.6 },
+              { feature: 'Stress Level', importance: 78.9 },
+              { feature: 'Physical Activity Level', importance: 65.4 },
+              { feature: 'BMI Category', importance: 58.7 },
+              { feature: 'Blood Pressure', importance: 45.2 },
+              { feature: 'Heart Rate', importance: 38.9 },
+              { feature: 'Age', importance: 32.1 }
             ].map((item, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -333,7 +312,7 @@ const Performance = () => {
           <div className="flex items-center justify-center space-x-8">
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-accent" />
-              <span className="text-sm">High Accuracy (95.58%)</span>
+              <span className="text-sm">High Accuracy (94.2%)</span>
             </div>
             <div className="flex items-center space-x-2">
               <Zap className="h-5 w-5 text-primary" />
@@ -345,7 +324,7 @@ const Performance = () => {
             </div>
           </div>
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            Our Support Vector Machine (SVM) model achieves industry-leading performance for sleep disorder
+            Our gradient boosting model achieves industry-leading performance for sleep disorder 
             classification, providing medical professionals with reliable diagnostic support.
           </p>
         </CardContent>

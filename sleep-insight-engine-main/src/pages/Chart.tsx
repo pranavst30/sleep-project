@@ -48,8 +48,7 @@ const Chart = () => {
   const processChartData = (rawData: any[]): ChartData => {
     // Sleep Disorder Distribution
     const disorderCounts = rawData.reduce((acc, row) => {
-      let disorder = row['Sleep Disorder'] || 'Healthy';
-      if (disorder.trim() === 'None') disorder = 'Healthy';
+      const disorder = row['Sleep Disorder'] || 'None';
       acc[disorder] = (acc[disorder] || 0) + 1;
       return acc;
     }, {});

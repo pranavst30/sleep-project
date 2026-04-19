@@ -80,7 +80,7 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="text-center shadow-medical">
           <CardContent className="pt-6">
             <div className="text-3xl font-bold text-primary">95%</div>
@@ -89,8 +89,14 @@ const Home = () => {
         </Card>
         <Card className="text-center shadow-medical">
           <CardContent className="pt-6">
-            <div className="text-3xl font-bold text-accent">2</div>
+            <div className="text-3xl font-bold text-accent">3</div>
             <div className="text-muted-foreground">Disorder Types Detected</div>
+          </CardContent>
+        </Card>
+        <Card className="text-center shadow-medical">
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold text-primary-glow">375+</div>
+            <div className="text-muted-foreground">Data Points Analyzed</div>
           </CardContent>
         </Card>
       </section>

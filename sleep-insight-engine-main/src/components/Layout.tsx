@@ -68,7 +68,7 @@ const Layout = ({ children }: LayoutProps) => {
       <footer className="border-t border-border bg-card/30 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="text-center text-muted-foreground">
-            <p>&copy; 2026 Sleep Health Predictor. Advanced ML-powered health insights.</p>
+            <p>&copy; 2024 Sleep Health Predictor. Advanced ML-powered health insights.</p>
           </div>
         </div>
       </footer>
