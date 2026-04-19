@@ -2,4 +2,5 @@ Flask
 pandas
 numpy
 scikit-learn
-flask-corsgunicorn
+flask-cors
+gunicorn
