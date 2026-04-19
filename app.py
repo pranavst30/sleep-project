@@ -1,15 +1,21 @@
+import os
 import joblib
 import pandas as pd
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+
+# ---------------------------------------------------------------------------
+# Serve React static build + Flask API from a single service
+# ---------------------------------------------------------------------------
+DIST_DIR = os.path.join(os.path.dirname(__file__), "dist")
+
+app = Flask(__name__, static_folder=DIST_DIR, static_url_path="")
+CORS(app)
 
 # ---------------------------------------------------------------------------
 # Load the saved SVM pipeline (ColumnTransformer + SVC)
 # ---------------------------------------------------------------------------
-model = joblib.load("svm_optimized_final.pkl")
-
-app = Flask(__name__)
-CORS(app)  # Allow cross-origin requests from React frontend
+model = joblib.load(os.path.join(os.path.dirname(__file__), "svm_optimized_final.pkl"))
 
 # ---------------------------------------------------------------------------
 # Encoding maps – must match the label-encoding used during training
@@ -53,11 +59,16 @@ FEATURE_COLS = [
 
 
 # ---------------------------------------------------------------------------
-# Health check
+# Serve React frontend for all non-API routes (SPA support)
 # ---------------------------------------------------------------------------
-@app.route("/", methods=["GET"])
-def health():
-    return jsonify({"status": "ok", "message": "Sleep Disorder API is running!"})
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_react(path):
+    # If the path maps to a real static file (JS, CSS, images) serve it
+    if path and os.path.exists(os.path.join(DIST_DIR, path)):
+        return send_from_directory(DIST_DIR, path)
+    # Otherwise fall back to index.html so React Router can handle the route
+    return send_from_directory(DIST_DIR, "index.html")
 
 
 # ---------------------------------------------------------------------------
@@ -68,7 +79,6 @@ def api_predict():
     try:
         data = request.get_json()
 
-        # Encode categorical fields using the maps
         gender = GENDER_MAP[data["Gender"]]
         age = int(data["Age"])
         occupation = OCCUPATION_MAP[data["Occupation"]]
@@ -81,7 +91,6 @@ def api_predict():
         heart_rate = int(data["Heart_Rate"])
         daily_steps = int(data["Daily_Steps"])
 
-        # Build a single-row DataFrame that mirrors the training data
         input_data = pd.DataFrame(
             [[gender, age, occupation, sleep_duration, quality_of_sleep,
               physical_activity, stress_level, bmi_category,
@@ -89,7 +98,6 @@ def api_predict():
             columns=FEATURE_COLS,
         )
 
-        # Predict
         pred = model.predict(input_data)[0]
         label = CLASS_NAMES.get(pred, str(pred))
         description = CLASS_DESCRIPTIONS.get(label, "")
