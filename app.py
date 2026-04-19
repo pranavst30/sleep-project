@@ -53,6 +53,14 @@ FEATURE_COLS = [
 
 
 # ---------------------------------------------------------------------------
+# Health check
+# ---------------------------------------------------------------------------
+@app.route("/", methods=["GET"])
+def health():
+    return jsonify({"status": "ok", "message": "Sleep Disorder API is running!"})
+
+
+# ---------------------------------------------------------------------------
 # JSON API endpoint for the React frontend
 # ---------------------------------------------------------------------------
 @app.route("/api/predict", methods=["POST"])
